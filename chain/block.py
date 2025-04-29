@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 from transaction import Transaction
 
+
 @dataclass
 class Block:
     index: int
