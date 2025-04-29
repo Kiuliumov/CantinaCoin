@@ -13,3 +13,20 @@ class Block:
     previous_hash: str
     hash: Optional[str] = field(init=False)
 
+    def __post_init__(self):
+        self.hash = self.compute_hash()
+
+    def compute_hash(self) -> str:
+        """
+        Generate SHA-256 hash of the block's contents.
+        Excludes the hash field itself.
+        """
+        block_data = {
+            'index': self.index,
+            'timestamp': self.timestamp,
+            'transactions': [t.__dict__ for t in self.transactions],
+            'proof': self.proof,
+            'previous_hash': self.previous_hash
+        }
+        block_string = json.dumps(block_data, sort_keys=True).encode()
+        return hashlib.sha256(block_string).hexdigest()
