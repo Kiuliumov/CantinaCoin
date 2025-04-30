@@ -1,7 +1,9 @@
 import time
 from typing import List
 from urllib.parse import urlparse
+
 import requests
+
 from .block import Block, Transaction
 from .proof import proof_of_work
 import hashlib

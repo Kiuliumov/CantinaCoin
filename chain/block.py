@@ -39,3 +39,14 @@ class Block:
             'proof': self.proof,
             'previous_hash': self.previous_hash
         }
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        transactions = [Transaction(**tx) for tx in data['transactions']]
+        return cls(
+            index=data['index'],
+            timestamp=data['timestamp'],
+            transactions=transactions,
+            proof=data['proof'],
+            previous_hash=data['previous_hash']
+        )
