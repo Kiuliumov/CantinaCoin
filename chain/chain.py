@@ -1,28 +1,29 @@
+import json
 import time
 from typing import List
 from urllib.parse import urlparse
-
 import requests
-
+import hashlib
 from .block import Block, Transaction
 from .proof import proof_of_work
-import hashlib
 
 class Blockchain:
-    def __init__(self, difficulty: int = 4):
+    def __init__(self, difficulty: int = 4, json_file='blockchain.json'):
         self.chain: List[Block] = []
         self.current_transactions: List[Transaction] = []
         self.difficulty = difficulty
         self.nodes = set()
+        self.json_file = json_file
 
-        print("Creating genesis block...")
-        self.new_block(previous_hash="1", proof=100)
+        self.load_chain_from_file()
+
+        if len(self.chain) == 0:
+            print("Creating genesis block...")
+            self.new_block(previous_hash="1", proof=100)
 
     def new_transaction(self, sender: str, recipient: str, amount: float) -> int:
         """
         Creates a new transaction in the list of transactions.
-
-        :return: The index of the block that will hold this transaction.
         """
         transaction = Transaction(sender, recipient, amount)
         self.current_transactions.append(transaction)
@@ -31,10 +32,6 @@ class Blockchain:
     def new_block(self, proof: int, previous_hash: str = None) -> Block:
         """
         Creates a new block and adds it to the chain.
-
-        :param proof: <int> The proof given by the proof of work algorithm
-        :param previous_hash: (Optional) Hash of previous block
-        :return: <Block> The new block
         """
         block = Block(
             index=len(self.chain) + 1,
@@ -46,6 +43,10 @@ class Blockchain:
 
         self.current_transactions = []
         self.chain.append(block)
+
+        # Save the updated blockchain to the JSON file
+        self.save_chain_to_file()
+
         return block
 
     def mine_block(self) -> Block:
@@ -63,8 +64,6 @@ class Blockchain:
     def is_chain_valid(self) -> bool:
         """
         Checks if the entire blockchain is valid.
-
-        :return: <bool> True if valid, False otherwise
         """
         for i in range(1, len(self.chain)):
             current = self.chain[i]
@@ -148,3 +147,23 @@ class Blockchain:
             return True
 
         return False
+
+    def save_chain_to_file(self):
+        """
+        Save the blockchain to a JSON file.
+        """
+        with open(self.json_file, 'w') as file:
+            json.dump([block.to_dict() for block in self.chain], file)
+
+    def load_chain_from_file(self):
+        """
+        Load the blockchain from a JSON file.
+        """
+        try:
+            with open(self.json_file, 'r') as file:
+                chain_data = json.load(file)
+                self.chain = [Block.from_dict(block) for block in chain_data]
+        except FileNotFoundError:
+            print("No blockchain file found, starting with an empty chain.")
+        except json.JSONDecodeError:
+            print("Error decoding blockchain data from file.")
