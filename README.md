@@ -1,18 +1,24 @@
 
-# CantinaCoin Blockchain
+# 🌟 CantinaCoin Blockchain
 
-CantinaCoin is a simple decentralized cryptocurrency powered by a blockchain. This project demonstrates the basic principles of a blockchain such as transactions, mining, proof of work, and consensus algorithms. It uses Python for the backend and FastAPI for providing a REST API to interact with the blockchain.
+CantinaCoin is a decentralized cryptocurrency powered by a custom blockchain, built using Python and FastAPI. This project demonstrates blockchain fundamentals like transactions, mining, proof of work, consensus algorithms, and node registration. It is designed for learning, exploration, and building on top of it.
+
 ![CantinaCoin Icon](image.png)
-## Features
 
-- **Transaction Creation**: Users can create transactions that will be included in the blockchain.
-- **Mining**: Mine new blocks with proof of work and add them to the blockchain.
-- **Blockchain Validation**: Ensure the integrity of the blockchain with validation mechanisms.
-- **Node Registration**: Register new nodes to the network, supporting a decentralized architecture.
-- **Conflict Resolution**: Resolve conflicts between nodes using the longest valid chain rule.
-- **Persistent Storage**: Save the blockchain to a local JSON file for persistence across restarts.
+---
 
-## Table of Contents
+## 🚀 Features
+
+- **Transaction Creation**: Create transactions that get included in new blocks.
+- **Mining**: Mine new blocks using Proof of Work.
+- **Blockchain Validation**: Ensure the integrity of the blockchain using built-in validation.
+- **Node Registration**: Add new nodes to the network for a decentralized system.
+- **Conflict Resolution**: Automatically resolve conflicts by syncing with the longest valid chain.
+- **Persistent Storage**: Store the blockchain in a JSON file for persistence.
+
+---
+
+## 📦 Table of Contents
 
 - [Features](#features)
 - [Getting Started](#getting-started)
@@ -24,7 +30,7 @@ CantinaCoin is a simple decentralized cryptocurrency powered by a blockchain. Th
 
 ---
 
-## Getting Started
+## 🏁 Getting Started
 
 ### Prerequisites
 
@@ -40,12 +46,14 @@ cd cantinacoin
 ### 2. Create a Virtual Environment
 
 #### On macOS/Linux:
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
 #### On Windows:
+
 ```bash
 python -m venv venv
 venv\Scriptsctivate
@@ -72,7 +80,7 @@ You can interact with the API through Swagger UI at:
 
 ---
 
-## API Endpoints
+## 🌍 API Endpoints
 
 ### 1. **Get the Blockchain**
 
@@ -81,6 +89,7 @@ You can interact with the API through Swagger UI at:
 Fetch the full blockchain.
 
 **Response:**
+
 ```json
 {
   "length": 1,
@@ -96,6 +105,8 @@ Fetch the full blockchain.
 }
 ```
 
+---
+
 ### 2. **Create a New Transaction**
 
 `POST /transactions/new`
@@ -103,6 +114,7 @@ Fetch the full blockchain.
 Create a new transaction. The transaction will be added to the next block.
 
 **Request Body:**
+
 ```json
 {
   "sender": "Alice",
@@ -112,11 +124,14 @@ Create a new transaction. The transaction will be added to the next block.
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Transaction will be added to block 2"
 }
 ```
+
+---
 
 ### 3. **Mine a New Block**
 
@@ -125,6 +140,7 @@ Create a new transaction. The transaction will be added to the next block.
 Mine a new block and add it to the blockchain.
 
 **Response:**
+
 ```json
 {
   "message": "New Block Forged",
@@ -144,6 +160,8 @@ Mine a new block and add it to the blockchain.
 }
 ```
 
+---
+
 ### 4. **Check Blockchain Validity**
 
 `GET /valid`
@@ -151,11 +169,14 @@ Mine a new block and add it to the blockchain.
 Check if the blockchain is valid (i.e., all blocks are properly linked and proof of work is correct).
 
 **Response:**
+
 ```json
 {
   "is_valid": true
 }
 ```
+
+---
 
 ### 5. **Register New Nodes**
 
@@ -164,6 +185,7 @@ Check if the blockchain is valid (i.e., all blocks are properly linked and proof
 Register new nodes to the network.
 
 **Request Body:**
+
 ```json
 {
   "nodes": ["http://127.0.0.1:8001"]
@@ -171,12 +193,15 @@ Register new nodes to the network.
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Nodes registered",
   "total_nodes": ["http://127.0.0.1:8001"]
 }
 ```
+
+---
 
 ### 6. **Resolve Conflicts**
 
@@ -185,6 +210,7 @@ Register new nodes to the network.
 Resolve conflicts with other nodes by syncing with the longest valid chain.
 
 **Response:**
+
 ```json
 {
   "message": "Our chain was replaced",
@@ -215,6 +241,40 @@ Resolve conflicts with other nodes by syncing with the longest valid chain.
 
 ---
 
-## Proof of Work
+## 💡 Proof of Work
 
-The Proof of Work (PoW) algorithm is a mechanism that ensures the blockchain is secure and tamper-proof. The algorithm requires miners to solve a computational puzzle, where the hash of the combined `last_proof` and `current_proof` must start with a certain number of leading zeros.
+The **Proof of Work** algorithm is a mechanism that ensures the blockchain is secure and tamper-proof. The algorithm requires miners to solve a computational puzzle, where the hash of the combined `last_proof` and `current_proof` must start with a certain number of leading zeros.
+
+---
+
+## 🤝 Consensus Algorithm
+
+To maintain the integrity of the decentralized network, **CantinaCoin** implements a consensus algorithm based on the **longest valid chain rule**. This algorithm ensures that nodes in the network work together to agree on the single valid blockchain. If a node discovers a longer and valid chain from another node, it will adopt that chain and replace its own.
+
+---
+
+## 🖧 Running Multiple Nodes
+
+To run a multi-node blockchain network:
+
+1. **Start one instance of the CantinaCoin API** as the main node:
+
+```bash
+uvicorn api:app --reload --port 8000
+```
+
+2. **Start other nodes** on different ports (e.g., 8001, 8002):
+
+```bash
+uvicorn api:app --reload --port 8001
+```
+
+3. **Register the new nodes** in the main node by calling the `/nodes/register` endpoint.
+
+4. **Resolve conflicts** to sync the blockchain across all nodes by calling the `/nodes/resolve` endpoint.
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
