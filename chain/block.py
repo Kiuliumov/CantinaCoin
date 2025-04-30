@@ -2,8 +2,7 @@ import hashlib
 import json
 from dataclasses import dataclass, field
 from typing import List, Optional
-from transaction import Transaction
-
+from chain.transaction import Transaction
 
 @dataclass
 class Block:
@@ -31,3 +30,12 @@ class Block:
         }
         block_string = json.dumps(block_data, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
+
+    def to_dict(self):
+        return {
+            'index': self.index,
+            'timestamp': self.timestamp,
+            'transactions': [tx.to_dict() for tx in self.transactions],
+            'proof': self.proof,
+            'previous_hash': self.previous_hash
+        }
